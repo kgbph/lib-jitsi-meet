@@ -215,6 +215,9 @@ const XMPPEvents = {
     // Designates an event indicating that we sent an XMPP message to the MUC.
     SENDING_CHAT_MESSAGE: 'xmpp.sending_chat_message',
 
+    // Designates an event indicating that we sent a beer chat to the MUC.
+    SENDING_BEER_CHAT: 'xmpp.sending_beer_chat',
+
     // Designates an event indicating that we sent a private XMPP message to
     // a specific user of the muc.
     SENDING_PRIVATE_CHAT_MESSAGE: 'xmpp.sending_private_chat_message',

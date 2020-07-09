@@ -809,6 +809,21 @@ JitsiConference.prototype.sendTextMessage = function(
 };
 
 /**
+ * Sends beer chat to the other participants in the conference
+ * @param amount the amount to send.
+ * @param message the text message.
+ * @param elementName the element name to encapsulate the message.
+ */
+JitsiConference.prototype.sendBeerChat = function(
+    amount, message, elementName = 'body') {
+    if (this.room) {
+        const displayName = (this.room.getFromPresence('nick') || {}).value;
+
+        this.room.sendBeerChat(amount, message, elementName, displayName);
+    }
+};
+
+/**
  * Send private text message to another participant of the conference
  * @param id the id of the participant to send a private message.
  * @param message the text message.

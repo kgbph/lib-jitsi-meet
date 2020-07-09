@@ -12,6 +12,7 @@ import XMPPEvents from '../../service/xmpp/XMPPEvents';
 import Lobby from './Lobby';
 import Moderator from './moderator';
 import XmppConnection from './XmppConnection';
+import BeerChatPayment from '../payment/BeerChatPayment';
 
 const logger = getLogger(__filename);
 
@@ -824,6 +825,44 @@ export default class ChatRoom extends Listenable {
         }
         this.connection.send(msg);
         this.eventEmitter.emit(XMPPEvents.SENDING_CHAT_MESSAGE, message);
+    }
+
+    /**
+     * Send beer chat to the other participants in the conference
+     * @param amount
+     * @param message
+     * @param elementName
+     * @param nickname
+     */
+    sendBeerChat(amount, message, elementName, nickname) {
+        const msg = $msg({ to: this.roomjid,
+            type: 'groupchat' });
+
+        // We are adding the message in a packet extension. If this element
+        // is different from 'body', we add a custom namespace.
+        // e.g. for 'json-message' extension of message stanza.
+        if (elementName === 'body') {
+            msg.c(elementName, message).up();
+        } else {
+            msg.c(elementName, { xmlns: 'http://jitsi.org/jitmeet' }, message)
+                .up();
+        }
+        if (nickname) {
+            msg.c('nick', { xmlns: 'http://jabber.org/protocol/nick' })
+                .t(nickname)
+                .up()
+                .up();
+        }
+
+        const paymentClient = new BeerChatPayment();
+        const paymentSuccess = () => {
+            this.connection.send(msg);
+            this.eventEmitter.emit(XMPPEvents.SENDING_BEER_CHAT, message);
+        };
+
+        paymentClient
+            .send(amount)
+            .then(paymentSuccess);
     }
 
     /* eslint-disable max-params */
