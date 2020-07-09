@@ -829,24 +829,21 @@ export default class ChatRoom extends Listenable {
 
     /**
      * Send beer chat to the other participants in the conference
-     * @param amount
-     * @param message
-     * @param elementName
-     * @param nickname
+     *
+     * @param {number} amount The amount to send
+     * @param {string} message The text message
+     * @param {string} nickname The current user name
      */
-    sendBeerChat(amount, message, elementName, nickname) {
-        const msg = $msg({ to: this.roomjid,
-            type: 'groupchat' });
+    sendBeerChat(amount, message, nickname) {
+        const msg = $msg({
+            to: this.roomjid,
+            type: 'groupchat'
+        });
 
-        // We are adding the message in a packet extension. If this element
-        // is different from 'body', we add a custom namespace.
-        // e.g. for 'json-message' extension of message stanza.
-        if (elementName === 'body') {
-            msg.c(elementName, message).up();
-        } else {
-            msg.c(elementName, { xmlns: 'http://jitsi.org/jitmeet' }, message)
-                .up();
-        }
+        msg
+            .c('amount', amount).up()
+            .c('body', message).up();
+
         if (nickname) {
             msg.c('nick', { xmlns: 'http://jabber.org/protocol/nick' })
                 .t(nickname)
@@ -857,7 +854,11 @@ export default class ChatRoom extends Listenable {
         const paymentClient = new BeerChatPayment();
         const paymentSuccess = () => {
             this.connection.send(msg);
-            this.eventEmitter.emit(XMPPEvents.SENDING_BEER_CHAT, message);
+            this.eventEmitter.emit(
+                XMPPEvents.SENDING_BEER_CHAT,
+                amount,
+                message
+            );
         };
 
         paymentClient
@@ -1040,6 +1041,7 @@ export default class ChatRoom extends Listenable {
             return true;
         }
 
+        const amount = $(msg).find('>amount').text();
         const txt = $(msg).find('>body').text();
         const subject = $(msg).find('>subject');
 
@@ -1100,12 +1102,17 @@ export default class ChatRoom extends Listenable {
         }
 
         if (txt) {
-            if (type === 'chat') {
-                this.eventEmitter.emit(XMPPEvents.PRIVATE_MESSAGE_RECEIVED,
+            if (amount) {
+                this.eventEmitter.emit(XMPPEvents.BEER_CHAT_RECEIVED,
+                    from, nick, amount, txt, this.myroomjid, stamp);
+            } else {
+                if (type === 'chat') {
+                    this.eventEmitter.emit(XMPPEvents.PRIVATE_MESSAGE_RECEIVED,
                         from, nick, txt, this.myroomjid, stamp);
-            } else if (type === 'groupchat') {
-                this.eventEmitter.emit(XMPPEvents.MESSAGE_RECEIVED,
+                } else if (type === 'groupchat') {
+                    this.eventEmitter.emit(XMPPEvents.MESSAGE_RECEIVED,
                         from, nick, txt, this.myroomjid, stamp);
+                }
             }
         }
     }

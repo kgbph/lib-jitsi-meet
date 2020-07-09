@@ -176,6 +176,11 @@ export const MEMBERS_ONLY_CHANGED = 'conference.membersOnlyChanged';
 export const MESSAGE_RECEIVED = 'conference.messageReceived';
 
 /**
+ * New beer chat was received.
+ */
+export const BEER_CHAT_RECEIVED = 'conference.beerChatReceived';
+
+/**
  * Event indicates that the current selected input device has no signal
  */
 export const NO_AUDIO_INPUT = 'conference.no_audio_input';

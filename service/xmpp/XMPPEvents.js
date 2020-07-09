@@ -108,6 +108,10 @@ const XMPPEvents = {
     // received.
     MESSAGE_RECEIVED: 'xmpp.message_received',
 
+    // Designates an event indicating that a beer chat in the MUC was
+    // received.
+    BEER_CHAT_RECEIVED: 'xmpp.beer_chat_received',
+
     // Designates an event indicating that an invite XMPP message in the MUC was
     // received.
     INVITE_MESSAGE_RECEIVED: 'xmpp.invite_message_received',

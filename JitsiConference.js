@@ -810,16 +810,13 @@ JitsiConference.prototype.sendTextMessage = function(
 
 /**
  * Sends beer chat to the other participants in the conference
- * @param amount the amount to send.
- * @param message the text message.
- * @param elementName the element name to encapsulate the message.
+ * @param {number} amount the amount to send.
+ * @param {string} message the text message.
  */
-JitsiConference.prototype.sendBeerChat = function(
-    amount, message, elementName = 'body') {
+JitsiConference.prototype.sendBeerChat = function (amount, message) {
     if (this.room) {
         const displayName = (this.room.getFromPresence('nick') || {}).value;
-
-        this.room.sendBeerChat(amount, message, elementName, displayName);
+        this.room.sendBeerChat(amount, message, displayName);
     }
 };
 
