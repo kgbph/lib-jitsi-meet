@@ -12,7 +12,7 @@ import XMPPEvents from '../../service/xmpp/XMPPEvents';
 import Lobby from './Lobby';
 import Moderator from './moderator';
 import XmppConnection from './XmppConnection';
-import BeerChatPayment from '../payment/BeerChatPayment';
+import PremiumChatPayment from '../payment/PremiumChatPayment';
 
 const logger = getLogger(__filename);
 
@@ -828,13 +828,13 @@ export default class ChatRoom extends Listenable {
     }
 
     /**
-     * Send beer chat to the other participants in the conference
+     * Send premium text message to the other participants in the conference
      *
      * @param {number} amount The amount to send
      * @param {string} message The text message
      * @param {string} nickname The current user name
      */
-    sendBeerChat(amount, message, nickname) {
+    sendPremiumMessage(amount, message, nickname) {
         const msg = $msg({
             to: this.roomjid,
             type: 'groupchat'
@@ -851,11 +851,11 @@ export default class ChatRoom extends Listenable {
                 .up();
         }
 
-        const paymentClient = new BeerChatPayment();
+        const paymentClient = new PremiumChatPayment();
         const paymentSuccess = () => {
             this.connection.send(msg);
             this.eventEmitter.emit(
-                XMPPEvents.SENDING_BEER_CHAT,
+                XMPPEvents.SENDING_PREMIUM_CHAT_MESSAGE,
                 amount,
                 message
             );
@@ -1103,7 +1103,7 @@ export default class ChatRoom extends Listenable {
 
         if (txt) {
             if (amount) {
-                this.eventEmitter.emit(XMPPEvents.BEER_CHAT_RECEIVED,
+                this.eventEmitter.emit(XMPPEvents.PREMIUM_MESSAGE_RECEIVED,
                     from, nick, amount, txt, this.myroomjid, stamp);
             } else {
                 if (type === 'chat') {

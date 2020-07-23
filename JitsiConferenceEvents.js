@@ -176,9 +176,9 @@ export const MEMBERS_ONLY_CHANGED = 'conference.membersOnlyChanged';
 export const MESSAGE_RECEIVED = 'conference.messageReceived';
 
 /**
- * New beer chat was received.
+ * New premium text message was received.
  */
-export const BEER_CHAT_RECEIVED = 'conference.beerChatReceived';
+export const PREMIUM_MESSAGE_RECEIVED = 'conference.premiumMessageReceived';
 
 /**
  * Event indicates that the current selected input device has no signal

@@ -809,14 +809,14 @@ JitsiConference.prototype.sendTextMessage = function(
 };
 
 /**
- * Sends beer chat to the other participants in the conference
+ * Sends premium text message to the other participants in the conference
  * @param {number} amount the amount to send.
  * @param {string} message the text message.
  */
-JitsiConference.prototype.sendBeerChat = function (amount, message) {
+JitsiConference.prototype.sendPremiumTextMessage = function (amount, message) {
     if (this.room) {
         const displayName = (this.room.getFromPresence('nick') || {}).value;
-        this.room.sendBeerChat(amount, message, displayName);
+        this.room.sendPremiumMessage(amount, message, displayName);
     }
 };
 
